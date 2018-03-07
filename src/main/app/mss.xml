@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <sub-flow name="mssSub_Flow">
+        <set-session-variable variableName="min" value="#[message.inboundProperties.'http.uri.params'.minimumNumber]" doc:name="Set Minimum"/>
+        <set-session-variable variableName="max" value="#[message.inboundProperties.'http.uri.params'.maximumNumber]" doc:name="Set Maximum"/>
+        <set-session-variable variableName="arrayNums" value="" doc:name="Array of Numbers"/>
+        <scripting:component doc:name="Groovy">
+            <scripting:script engine="Groovy"><![CDATA[def minimum = sessionVars.min.toInteger();
+def maximum = sessionVars.max.toInteger();
+def numberList = [];
+def returnVal = "";
+
+for (x = minimum;x <= maximum; x++)
+{
+	
+	if(x%3 == 0 && x%7 == 0){
+		returnVal = "SOMETHING & ME"; }
+	else if(x%3 == 0){
+		returnVal = "ME"; }
+	else if(x%7 == 0){
+		returnVal = "SOMETHING"; }
+	else {
+		returnVal = x.toString(); }
+	numberList<<(returnVal);
+}
+
+sessionVars.arrayNums = numberList;
+]]></scripting:script>
+        </scripting:component>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+sessionVars.arrayNums map
+	num: $
+]]></dw:set-payload>
+        </dw:transform-message>
+    </sub-flow>
+</mule>

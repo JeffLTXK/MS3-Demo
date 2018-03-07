@@ -1,0 +1,32 @@
+#%RAML 1.0
+title: Sample API
+description: Algorithm API for MSS
+baseUri: http://localhost
+
+/algorithm/{minimumNumber}/{maximumNumber}:
+  uriParameters:
+        minimumNumber:
+          description: "The minimum number"
+          type: integer
+          minimum: 1
+          maximum: 200
+        maximumNumber:
+          description: "The maximum number"
+          type: integer
+          minimum: 1
+          maximum: 200
+  get:
+    description: Return algorithm results
+    responses:
+      200:
+        body:
+          application/json:
+            example: {"1", "2", "3"}
+      400:
+        body:
+          application/json:
+            example: {"message":"Number out of range"}
+ 
+   
+    
+
