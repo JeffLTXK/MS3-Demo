@@ -21,11 +21,11 @@ for (x = minimum;x <= maximum; x++)
 {
 	
 	if(x%3 == 0 && x%7 == 0){
-		returnVal = "SOMETHING & ME"; }
+		returnVal = "MS3 and ME"; }
 	else if(x%3 == 0){
 		returnVal = "ME"; }
 	else if(x%7 == 0){
-		returnVal = "SOMETHING"; }
+		returnVal = "MS3"; }
 	else {
 		returnVal = x.toString(); }
 	numberList<<(returnVal);
